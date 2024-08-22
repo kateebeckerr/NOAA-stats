@@ -1,0 +1,73 @@
+---
+title: "NOAAanalysis"
+author: "Kate Becker"
+date: "2024-08-22"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(ggplot2)
+```
+
+```{r}
+NOAAaqua <- read_csv("/Users/katebecker/Documents/Bren/kateebeckerr.github.io/playing/NOAA-stats/California Aquaculture-2.csv")
+view(NOAAaqua)
+colnames(NOAAaqua)
+
+NOAAaqua <- NOAAaqua[, -1]
+
+```
+
+```{r}
+unique(NOAAaqua$Country)
+
+NOAA_group <- NOAAaqua %>%
+  group_by(Country, Year)
+```
+
+# General Analysis
+
+- group by takes an existing tbl and convert it into a grouped table where operations are performed by group 
+```{r}
+ggplot(NOAAaqua, aes(x = Country, y = Dollars)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+```
+
+```{r}
+NZ <- NOAA_group %>%
+  filter(Country == "NEW ZEALAND")
+```
+
+```{r}
+unique(NZ$Product)
+```
+
+```{r}
+#NZ_viz <- NZ %>%
+  #ggplot(aes(x = Year)) + 
+  #geom_histogram() +
+  #ggplot(aes(x = ))
+
+NZ_viz <- ggplot(NZ, aes(Product, Kilos)) +
+  geom_point()+
+  scale_color_manual(values = ifelse(NZ$Product == "MUSSELS FROZEN/DRIED/SALTED/BRINE", "red", "black"))+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 5))
+
+NZ_viz
+```
+
+```{r}
+NZ_viz <- ggplot(NZ, aes(Product, Kilos, , color = ifelse(Product == "MUSSELS FROZEN/DRIED/SALTED/BRINE", "highlight", "normal"))) +
+  geom_point() +
+  scale_color_manual(values = c("highlight" = "red", "normal" = "black")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 5),
+        legend.position = "none")
+  
+ 
+NZ_viz
+```
+
